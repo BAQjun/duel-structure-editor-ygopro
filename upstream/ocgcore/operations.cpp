@@ -4669,7 +4669,7 @@ int32_t field::move_to_field(uint16_t step, card* target, uint32_t enable, uint3
 			returns.ivalue[0] = positions;
 			return FALSE;
 		}
-		if(target->data.type & TYPE_LINK) {
+		if(target->get_editor_type() & TYPE_LINK) {
 			returns.ivalue[0] = POS_FACEUP_ATTACK;
 			return FALSE;
 		}
@@ -4813,7 +4813,7 @@ int32_t field::change_position(uint16_t step, group * targets, effect * reason_e
 			uint8_t npos = pcard->position_param & 0xff;
 			uint8_t opos = pcard->current.position;
 			if ((pcard->current.location != LOCATION_MZONE && pcard->current.location != LOCATION_SZONE)
-				|| (pcard->data.type & TYPE_LINK)
+				|| (pcard->get_editor_type() & TYPE_LINK)
 				|| pcard->get_status(STATUS_SUMMONING | STATUS_SPSUMMON_STEP)
 				|| !pcard->is_affect_by_effect(reason_effect) || npos == opos
 				|| (!(pcard->data.type & TYPE_TOKEN) && (opos & POS_FACEUP) && (npos & POS_FACEDOWN) && !pcard->is_capable_turn_set(reason_player))

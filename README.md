@@ -33,3 +33,5 @@ Windows 下将仓库克隆到 D:，准备 Python 3.14，并调整工具脚本中
 客户端来自 [Fluorohydride/ygopro](https://github.com/Fluorohydride/ygopro)，保留 GPL-2.0 许可证；核心来自 [Fluorohydride/ygopro-core](https://github.com/Fluorohydride/ygopro-core)，保留 `upstream/ocgcore/LICENSE` 中的 MIT 许可证。其他依赖遵循各自许可。
 
 源码基线：客户端 `3734faa3adf8191c93c5b027c54f2f8b310d626a`，核心 `c4ccbab40702e4af6da4f4ad1d7a04c3ea80ad02`，开发时的脚本基线 `cfbb14cdbf7b2095db543f2620eb2e88b0fb9220`。另见 `docs/源码基线.json`。
+
+最新修复：[自定义连接怪兽的表示限制](docs/0.2.4-连接表示限制.md)，已同步两个版本；本次真实核心回归通过 589 项断言。

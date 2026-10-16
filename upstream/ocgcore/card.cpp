@@ -3566,7 +3566,7 @@ uint8_t card::get_spsummonable_position(effect* reason_effect, uint32_t sumtype,
 		bool poscheck = true;
 		if(!(positions[p] & sumpos))
 			continue;
-		if((data.type & (TYPE_TOKEN | TYPE_LINK)) && (positions[p] & POS_FACEDOWN))
+		if(((data.type & TYPE_TOKEN) && (positions[p] & POS_FACEDOWN)) || ((get_editor_type() & TYPE_LINK) && positions[p] != POS_FACEUP_ATTACK))
 			continue;
 		pduel->game_field->filter_player_effect(sumplayer, EFFECT_LIMIT_SPECIAL_SUMMON_POSITION, &eset);
 		for(effect_set::size_type i = 0; i < eset.size(); ++i) {
@@ -3986,7 +3986,7 @@ int32_t card::is_capable_attack_announce(uint8_t playerid) {
 int32_t card::is_capable_change_position(uint8_t playerid) {
 	if(is_status(STATUS_CANNOT_CHANGE_FORM))
 		return FALSE;
-	if(data.type & TYPE_LINK)
+	if(get_editor_type() & TYPE_LINK)
 		return FALSE;
 	if(is_status(STATUS_FORBIDDEN))
 		return FALSE;
@@ -3997,12 +3997,12 @@ int32_t card::is_capable_change_position(uint8_t playerid) {
 	return TRUE;
 }
 int32_t card::is_capable_change_position_by_effect(uint8_t playerid) {
-	if(data.type & TYPE_LINK)
+	if(get_editor_type() & TYPE_LINK)
 		return FALSE;
 	return TRUE;
 }
 int32_t card::is_capable_turn_set(uint8_t playerid) {
-	if(data.type & (TYPE_LINK | TYPE_TOKEN))
+	if((get_editor_type() & TYPE_LINK) || (data.type & TYPE_TOKEN))
 		return FALSE;
 	if(is_position(POS_FACEDOWN))
 		return FALSE;

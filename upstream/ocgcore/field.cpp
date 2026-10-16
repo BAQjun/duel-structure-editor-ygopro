@@ -3235,7 +3235,7 @@ int32_t field::is_player_can_spsummon(effect* reason_effect, uint32_t sumtype, u
 		return FALSE;
 	if((pcard->data.type & TYPE_TOKEN) && (pcard->current.location & LOCATION_ONFIELD))
 		return FALSE;
-	if(pcard->data.type & TYPE_LINK)
+	if(pcard->get_editor_type() & TYPE_LINK)
 		sumpos &= POS_FACEUP_ATTACK;
 	uint8_t position = pcard->get_spsummonable_position(reason_effect, sumtype, sumpos, playerid, toplayer);
 	if(position == 0)

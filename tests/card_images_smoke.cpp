@@ -1,0 +1,7 @@
+#include "../upstream/gframe/card_images.h"
+#include <sqlite3.h>
+#include <iostream>
+#include <fstream>
+#include <chrono>
+using namespace ygo;
+int main(){try{sqlite3* db=nullptr;if(sqlite3_open_v2("cards.cdb",&db,SQLITE_OPEN_READONLY,nullptr)!=SQLITE_OK)return 1;sqlite3_stmt* q=nullptr;sqlite3_prepare_v2(db,"select datas.id,texts.name from datas join texts using(id) where (datas.type & 7)!=0 order by datas.id",-1,&q,nullptr);std::vector<CardImageEntry> cards;while(sqlite3_step(q)==SQLITE_ROW)cards.push_back({uint32_t(sqlite3_column_int64(q,0)),reinterpret_cast<const char*>(sqlite3_column_text(q,1))});sqlite3_finalize(q);sqlite3_close(db);std::atomic<bool> cancel{false};auto report=CardImages::Repair(cards,{"expansions/pics",".card-images/pics","pics","D:/YGOPro/pics","D:/YGOPro/expansions/pics"},{},[](const CardDownloadProgress& p){static uint64_t last=0;if(p.downloaded/500!=last || p.file.find("补齐")!=std::string::npos){last=p.downloaded/500;std::cout<<CardDownload::Describe(p)<<std::endl;}},cancel);std::cout<<"RESULT checked="<<report.checked<<" valid="<<report.valid<<" missing="<<report.missing<<" corrupt="<<report.corrupt<<" repaired="<<report.repaired<<" unresolved="<<report.unavailable<<std::endl;for(const auto& issue:report.issues)if(issue.name.find("码丽")!=std::string::npos)std::cout<<"MALISS "<<issue.code<<" "<<issue.state<<std::endl;return 0;}catch(const std::exception& e){std::cerr<<e.what()<<std::endl;return 1;}}

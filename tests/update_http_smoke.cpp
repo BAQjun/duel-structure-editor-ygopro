@@ -1,0 +1,3 @@
+#include "../upstream/gframe/card_update_backend.cpp"
+#include <iostream>
+int main(){try{std::atomic<bool> cancel{false};auto body=ygo::Fetch("https://cdntx.moecube.com/ygopro-super-pre/data/latest-tag.txt",[](const std::string&){},cancel);std::string tag(body.begin(),body.end());if(tag.find("https://cdntx.moecube.com/ygopro-super-pre/archive/")!=0)throw std::runtime_error("Unexpected latest release URL");std::cout<<"PASS native Windows HTTPS transport reads current official prerelease tag ("<<body.size()<<" bytes)"<<std::endl;return 0;}catch(const std::exception& e){std::cerr<<e.what()<<std::endl;return 1;}}

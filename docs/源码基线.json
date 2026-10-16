@@ -1,0 +1,390 @@
+{
+  "project": "决构编辑器",
+  "captured_date": "2026-10-14",
+  "implementation_status": "v0.1.14-pre-duel-names-monster-destinations-wheel-link-level-restore-mandatory-summon-methods",
+  "client": {
+    "repository": "https://github.com/Fluorohydride/ygopro",
+    "commit": "3734faa3adf8191c93c5b027c54f2f8b310d626a"
+  },
+  "core": {
+    "repository": "https://github.com/Fluorohydride/ygopro-core",
+    "commit": "c4ccbab40702e4af6da4f4ad1d7a04c3ea80ad02",
+    "original_gitlink": "e5ce3178a7d78d3d31de0ef40993cb83b34772ce",
+    "reason": "Client CI uses core master; original recorded gitlink does not match current client interfaces."
+  },
+  "scripts": {
+    "repository": "https://github.com/Fluorohydride/ygopro-scripts",
+    "commit": "cfbb14cdbf7b2095db543f2620eb2e88b0fb9220"
+  },
+  "build": {
+    "toolchain": "llvm-mingw-20260616-ucrt-x86_64",
+    "architecture": "x86_64",
+    "graphics": "OpenGL",
+    "audio": false,
+    "simd": "none",
+    "premake": "5.0.0"
+  },
+  "dependencies": [
+    {
+      "name": "lua",
+      "url": "https://codeload.github.com/lua/lua/tar.gz/refs/tags/v5.4.8",
+      "sha256": "d85b70a65f43c5d2254944d58d625e822c8e2e10d9c6a3bd9b5b657e46376a19"
+    },
+    {
+      "name": "event",
+      "url": "https://github.com/libevent/libevent/releases/download/release-2.1.13-stable/libevent-2.1.13-stable.tar.gz",
+      "sha256": "f7e9383b8c0baa81b687e5b5eecc01beefaf1b19b64151d95ed61647fe7a315c"
+    },
+    {
+      "name": "png",
+      "url": "https://codeload.github.com/pnggroup/libpng/tar.gz/refs/tags/v1.6.50",
+      "sha256": "71158e53cfdf2877bc99bcab33641d78df3f48e6e0daad030afe9cb8c031aa46"
+    },
+    {
+      "name": "jpeg",
+      "url": "https://github.com/libjpeg-turbo/libjpeg-turbo/releases/download/3.2.0/libjpeg-turbo-3.2.0.tar.gz",
+      "sha256": "6f30092cef9fb839779646608f4ee14ae3cbac989c47fa05e841b0841f09878e"
+    },
+    {
+      "name": "freetype",
+      "url": "https://codeload.github.com/freetype/freetype/tar.gz/refs/tags/VER-2-13-3",
+      "sha256": "bc5c898e4756d373e0d991bab053036c5eb2aa7c0d5c67e8662ddc6da40c4103"
+    },
+    {
+      "name": "zlib",
+      "url": "https://github.com/madler/zlib/releases/download/v1.3.2/zlib-1.3.2.tar.gz",
+      "sha256": "bb329a0a2cd0274d05519d61c667c062e06990d72e125ee2dfa8de64f0119d16"
+    },
+    {
+      "name": "lzma",
+      "url": "https://github.com/tukaani-project/xz/releases/download/v5.8.3/xz-5.8.3.tar.gz",
+      "sha256": "3d3a1b973af218114f4f889bbaa2f4c037deaae0c8e815eec381c3d546b974a0"
+    },
+    {
+      "name": "sqlite3",
+      "url": "http://www.sqlite.org/2026/sqlite-amalgamation-3530300.zip",
+      "sha256": "646421e12aac110282ef8cc68f1a62d4bb15fc7b8f09da0b53e29ee690500431"
+    },
+    {
+      "name": "irrlicht",
+      "url": "https://codeload.github.com/mercury233/irrlicht/tar.gz/refs/heads/main",
+      "sha256": "344986369b85ecee3b5dc2ca1925058ca216bbf870ead6eb71b32b95ddef33bb"
+    }
+  ],
+  "card_database_sha256": "66087d6075e65ca1fbad2c8670ceeee6720d9d002a2bd20b28f0b24051c063ab",
+  "executable_sha256": "108f0011e8d59e5f24192c5c7055024c666bd1f20f077b115625665f6fc01265",
+  "initial_scenario_sha256": "27698f943ba1216fbe4d36e85d2632a94b99faed3aa56daf893aa494ab011238",
+  "release_version": "0.1.14",
+  "card_image_sources": {
+    "config": "card-images.conf",
+    "directories": [
+      "D:/YGOPro/pics",
+      "D:/YGOPro/expansions/pics"
+    ],
+    "external_files_available": 13483,
+    "embedded_full_library": false,
+    "repair_cache": ".card-images/pics",
+    "automatic_missing_image_repair": true,
+    "repair_source": "https://cdn.233.momobako.com/ygoimg/ygopro/<id>.webp!/format/jpg/fw/400/quality/90",
+    "native_decoder_audit": {
+      "checked": 13631,
+      "valid_before": 13475,
+      "missing": 156,
+      "corrupt": 0,
+      "repaired": 156,
+      "unresolved": 0,
+      "maliss_repaired": 10
+    }
+  },
+  "creation_flags": {
+    "procedure_complete": 1,
+    "normal_summoned_this_turn": 2,
+    "special_summoned_this_turn": 4,
+    "flip_summoned_this_turn": 8
+  },
+  "checks": {
+    "engine_assertions": 559,
+    "real_gui_and_replay": true,
+    "normal_summon_filter_categories": 7,
+    "owner_control_and_existing_card_gui": true,
+    "unchecked_decks_and_sort_undo_replay": true,
+    "paused_actual_session_replay": true,
+    "suspended_lua_save_restore": true,
+    "cross_session_gui_save_load": true,
+    "phase_button_progression": true,
+    "pre_draw_card_generation": true,
+    "cross_phase_actual_session_replay": true,
+    "deck_order_delete_undo_forward_replay": true,
+    "native_https_updater": true,
+    "updated_playable_cards_initialized": 15130,
+    "updated_card_initialization_errors": 0,
+    "update_and_rollback": true,
+    "corrupt_archive_retains_original": true,
+    "main_menu_startup_and_resize_visual_review": true,
+    "first_card_summon_selection_before_generation": true,
+    "all_source_real_download_progress_callbacks": 688,
+    "parallel_download_cache_and_resume": true,
+    "automatic_image_refresh_live_network": true,
+    "real_v4_replay_preserves_properties_and_rng": true,
+    "contextual_card_choices_gui": true,
+    "independent_player_timings_before_draw": true,
+    "perspective_swap_live_gui": true,
+    "opponent_decision_deferred_until_own_view": true,
+    "pending_opponent_decision_save_load": true,
+    "perspective_response_actual_replay": true,
+    "pending_effect_editor_open_close": true,
+    "toolbar_clear_of_information_pane": true,
+    "deck_delete_preserves_remaining_order": true,
+    "explicit_shuffle_undo_save_replay": true,
+    "opponent_pending_hover_information": true,
+    "opponent_pending_current_timing_edit": true,
+    "deck_shuffle_live_gui_undo_forward": true,
+    "grave_turn_real_lua": true,
+    "extra_group_insert_save_replay": true,
+    "summon_source_real_lua": true,
+    "summon_origin_regular_completion_independent": true,
+    "summon_methods_exclusive_and_fixed_sources": true,
+    "trap_monster_main_zones_only": true,
+    "instant_slot_hint_real_render": true,
+    "real_mouse_both_opponent_wait_directions": true,
+    "native_trap_own_value_preserved_under_origin_edit": true,
+    "trap_monster_rejects_legacy_normal_history": true,
+    "field_spell_only_field_destination": true,
+    "field_spell_omits_spell_trap_destination": true,
+    "extra_destination_only_eligible_monsters": true,
+    "procedure_completion_only_revive_limit_types": true,
+    "invalid_destination_and_hidden_flag_cleared_on_card_change": true,
+    "spell_trap_monster_destination_requires_monster_form": true,
+    "restoring_spell_trap_form_clears_monster_destination": true,
+    "continuous_monster_forms_only_spell_trap_destination": true,
+    "exclusive_monster_category_dropdown": true,
+    "other_monster_types_checkbox_dialog": true,
+    "custom_spell_trap_monster_card_name_library": true,
+    "real_custom_link_marker_getter_undo_save_replay": true,
+    "non_effect_extra_and_ritual_are_not_normal_monsters": true,
+    "end_duel_custom_replay_name_and_explicit_save_choice": true,
+    "batch_replay_delete_confirmation_cancel_and_unselected_preservation": true,
+    "custom_player_names_preserved_in_real_replay": true,
+    "redundant_level_and_position_lock_controls_removed": true,
+    "search_card_names_by_keyword_and_code": true,
+    "name_search_retains_selection_and_clears_to_full_library": true,
+    "link_rating_display_tracks_selected_arrows": true,
+    "prohibition_label_with_operation_tooltip": true,
+    "global_save_folder_isolation": true,
+    "start_menu_load_without_deck_selection": true,
+    "menu_load_restores_duel_flags_input_and_exit": true,
+    "real_editor_draw_selected_player_deck_order_undo_save_replay": true,
+    "draw_gui_pauses_and_undo_restores_both_hands": true,
+    "save_point_delete_confirm_cancel": true,
+    "save_folder_delete_counts_isolation_and_root_protection": true,
+    "dropdown_real_mouse_overlay_and_hit_testing": true,
+    "extra_monster_hand_and_main_deck_hidden": true,
+    "replay_graphical_checkbox_real_mouse_toggle": true,
+    "replay_selected_only_delete_and_cancel": true,
+    "pre_duel_player_names_and_cancel": true,
+    "start_from_save_uses_configured_names": true,
+    "in_duel_name_edit_removed": true,
+    "monster_back_row_requires_spell_trap_form": true,
+    "restoring_monster_clears_invalid_back_row_destination": true,
+    "real_mouse_dropdown_focus_released": true,
+    "closed_dropdown_wheel_preserves_selection": true,
+    "expanded_form_wheel_without_scrollbar_focus": true,
+    "zero_arrow_link_failure_then_nonlink_submit_restores_level": true,
+    "monster_summon_method_exactly_one_required": true,
+    "special_summon_source_omits_monster_zone": true,
+    "native_trap_own_summon_retains_back_row_source": true
+  },
+  "editor_protocol": {
+    "replay_format": 5,
+    "stable_target_bits": 64,
+    "opcodes": {
+      "create": 1,
+      "set_lp": 2,
+      "delete": 3,
+      "update": 4,
+      "reorder": 5,
+      "constant_effect": 6,
+      "shuffle": 7
+    },
+    "read_legacy_version_1": true,
+    "read_legacy_versions": [
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      8,
+      9
+    ],
+    "command_version": 9,
+    "command_words": 22,
+    "terminal_process_count": true,
+    "edit_process_index": true,
+    "custom_type_and_name_form_ids": [
+      5,
+      6
+    ],
+    "summon_method_flags": {
+      "special": 32,
+      "normal": 64,
+      "flip": 128
+    },
+    "summon_source_shift": 8,
+    "grave_this_turn_flag": 16,
+    "custom_link_marker_field": "defense for custom Link forms in v9",
+    "custom_link_marker_mask": "0x1ef",
+    "custom_link_rating": "number of selected arrows"
+  },
+  "initial_decks": {
+    "embedded_in_replay": true,
+    "legality_check": false,
+    "maximum_region_capacity": 254,
+    "automatic_shuffle": false,
+    "starting_hand_choices": {
+      "independent_players": true,
+      "minimum": 0,
+      "maximum": 254
+    }
+  },
+  "states": {
+    "audited_card_status_bits": 32,
+    "audited_effect_codes": 256,
+    "basic_restriction_options": 32,
+    "editable_constant_card_effects": 89,
+    "flow_status_write": "through_actual_process_and_timeline_restore",
+    "read_only_status_tab": false,
+    "deduplicated_ui": true,
+    "options_filtered_by_type": true
+  },
+  "save_format": {
+    "version": 1,
+    "extension": "yges",
+    "deterministic_journal": true,
+    "persistent_cross_session": true,
+    "snapshot_verifies_effects_queues_rng": true,
+    "global_directory": "D:/Codex/projects/duel-structure-editor/userdata/saves",
+    "folder_categories": true,
+    "load_from_start_menu": true,
+    "config": "editor-data.conf"
+  },
+  "pause": {
+    "default": true,
+    "initial_editor_open": true,
+    "space_key": true,
+    "engine_message_boundaries": true,
+    "initial_boundary": "before-first-turn-and-draw",
+    "editor_open_at_pending_decision": true
+  },
+  "release_date": "2026-10-14",
+  "card_updates": {
+    "default_sources": [
+      "mycard/ygopro-database:zh-CN",
+      "Fluorohydride/ygopro-scripts",
+      "MyCard superpre latest-tag"
+    ],
+    "checked_source_snapshot": {
+      "checked_date": "2026-10-14",
+      "sources": [
+        {
+          "file": "regular.cdb",
+          "url": "https://raw.githubusercontent.com/mycard/ygopro-database/master/locales/zh-CN/cards.cdb",
+          "bytes": 8087552,
+          "sha256": "c12c96ee06c8198a58e927bf36a4fcf7bd28a8545d87f0a40243388970217a69"
+        },
+        {
+          "file": "scripts.zip",
+          "url": "https://codeload.github.com/Fluorohydride/ygopro-scripts/zip/refs/heads/master",
+          "bytes": 14281969,
+          "sha256": "e43d317ae453a3d9f1765611d3f50a83b8f594c6c79e58994edf6301f8e217ca"
+        },
+        {
+          "file": "superpre.ypk",
+          "url": "https://cdntx.moecube.com/ygopro-super-pre/archive/ygopro-super-pre-29.13.ypk",
+          "bytes": 22021541,
+          "sha256": "4043db365721e2510875f78b65b8c8695b5cfadc1c721364b2d536648c8e54ef"
+        }
+      ],
+      "baseline_records": 13631,
+      "regular_records": 15019,
+      "prerelease_new_records": 113,
+      "prerelease_revision_records": 377,
+      "combined_records": 15132,
+      "missing_records": 1501,
+      "changed_records": 2474,
+      "playable_cards_initialized": 15130,
+      "metadata_records": 2,
+      "script_initialization_errors": 0,
+      "remote_full_effect_execution_coverage": false
+    },
+    "storage": ".card-updates",
+    "atomic_version_pointer": true,
+    "relative_portable_version_id": true,
+    "keeps_original_database_scripts": true,
+    "restart_to_activate": true,
+    "rollback_previous_version": true,
+    "ordinary_images": "local-library-and-native-jpeg-repair",
+    "prerelease_images": "included-in-upstream-pack",
+    "parallel_files": 3,
+    "range_connections_per_file": 4,
+    "received_bytes_progress": true,
+    "validated_cache": true,
+    "completed_segment_resume": true
+  },
+  "card_configuration": {
+    "deck_insert_choices": {
+      "1": "top",
+      "2": "bottom",
+      "3": "random-position-preserving-other-cards"
+    },
+    "custom_monster_stats_type_and_name": true,
+    "name_keeps_original_script_and_art": true,
+    "backrow_set_turn_history": true,
+    "link_attack_position_only": true,
+    "ordinary_backrow_set_only": true,
+    "deck_delete_preserves_order": true,
+    "explicit_shuffle": true,
+    "hide_unneeded_position_fields": true,
+    "instant_position_hint": true,
+    "extra_insert_choices": {
+      "1": "group-top",
+      "2": "group-bottom",
+      "3": "random-middle-when-possible"
+    },
+    "pendulum_extra_positions_filtered": true,
+    "pendulum_destination_only_pendulum_monsters": true,
+    "trap_monster_destinations": "main-monster-zones-1-to-5",
+    "extra_monster_zones_require_extra_deck_source": true,
+    "this_turn_summon_boolean": true
+  },
+  "perspective": {
+    "bottom_left_switch": true,
+    "independent_timing_profiles": true,
+    "configured_player_owns_manual_decision": true,
+    "keeps_engine_state": true,
+    "toolbar_anchor": "right-of-card-information-pane-at-bottom-of-main-field",
+    "allows_gui_focus_lifecycle_while_opponent_waits": true
+  },
+  "player_names": {
+    "maximum_characters": 19,
+    "editable_in_duel": true,
+    "long_name_scrolling": true,
+    "replay_names": true
+  },
+  "replay_management": {
+    "editor_explicit_save_choice": true,
+    "custom_file_name": true,
+    "in_memory_recording": true,
+    "batch_delete": true,
+    "batch_delete_confirmation": true
+  },
+  "editor_draw": {
+    "opcode": 8,
+    "minimum_cards": 1,
+    "maximum_cards": 255,
+    "reason": "REASON_RULE",
+    "selected_player": true,
+    "undo_save_replay": true
+  }
+}

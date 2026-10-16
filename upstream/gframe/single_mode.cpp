@@ -111,6 +111,9 @@ bool SingleMode::ServiceActions(bool waiting){
     else if(c.opcode==2)text+=L"LP 设为 "+std::to_wstring(c.value);
     else if(c.opcode==8)text+=L"抽 "+std::to_wstring(c.value)+L" 张卡";
     else if(c.opcode==9)text+=L"为"+name+L"添加超量素材「"+std::wstring(dataManager.GetName(c.code))+L"」×"+std::to_wstring(c.value);
+    else if(c.opcode==12){const wchar_t* kinds[]={L"特殊",L"融合",L"同调",L"超量",L"连接",L"仪式"};text+=name+L"的召唤履历设为"+kinds[c.value<=5?c.value:0]+L"召唤";}
+    else if(c.opcode==13){auto region=[](uint32_t z){return z==LOCATION_HAND?L"手牌":z==LOCATION_DECK?L"卡组":z==LOCATION_MZONE?L"怪兽区":z==LOCATION_SZONE?L"魔法陷阱区":z==LOCATION_GRAVE?L"墓地":z==LOCATION_REMOVED?L"除外区":z==LOCATION_EXTRA?L"额外卡组":L"超量素材";};text+=L"「"+std::wstring(dataManager.GetName(c.code))+L"」作为召唤素材：玩家 "+std::to_wstring(c.player+1)+L"的"+region(c.location)+L" → 玩家 "+std::to_wstring(c.attack+1)+L"的"+region(c.value);}
+    else if(c.opcode==14)return;
     else if(c.opcode==10)text+=L"将"+name+L"的指示物「"+std::wstring(dataManager.GetCounterName(c.code))+L"」数量设为 "+std::to_wstring(c.value);
     else if(c.opcode==3)text+=L"删除"+name;
     else if(c.opcode==4)text+=L"修改"+name+L"的形态、位置或状态";
@@ -135,6 +138,7 @@ void SingleMode::RefreshEditorState() {
  if(DuelEditor::active) {
   std::vector<editor_card_info> cards(editor_list_cards(pduel,nullptr,0));
   editor_list_cards(pduel,cards.data(),uint32_t(cards.size()));
+  std::vector<std::pair<uint64_t,uint32_t>> summonKinds;std::vector<editor_summon_material_info> summonMaterials;for(const auto& c:cards)if(c.location==LOCATION_MZONE){summonKinds.push_back({c.id,editor_summon_kind(pduel,c.id)});uint32_t n=editor_list_summon_materials(pduel,c.id,nullptr,0);size_t start=summonMaterials.size();summonMaterials.resize(start+n);if(n)editor_list_summon_materials(pduel,c.id,summonMaterials.data()+start,n);}DuelEditor::SummonHistories(summonKinds,summonMaterials);
   DuelEditor::Cards(cards,editor_revision(pduel));
   std::vector<editor_effect_info> effects(editor_list_custom_effects(pduel,nullptr,0));editor_list_custom_effects(pduel,effects.data(),effects.size());DuelEditor::CustomEffects(effects);
   std::vector<editor_material_info> materials(editor_list_materials(pduel,nullptr,0));editor_list_materials(pduel,materials.data(),uint32_t(materials.size()));std::vector<editor_counter_info> counters(editor_list_counters(pduel,nullptr,0));editor_list_counters(pduel,counters.data(),uint32_t(counters.size()));DuelEditor::Attachments(materials,counters);

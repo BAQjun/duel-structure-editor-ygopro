@@ -1,6 +1,7 @@
 #ifndef DUEL_EDITOR_API_H
 #define DUEL_EDITOR_API_H
 #include "ocgapi.h"
+#include "editor_summon_history.h"
 // v9 stores custom Link arrows in defense for Link forms and separates non-effect Extra/Ritual types from Normal.
 // v6 adds grave-turn and Extra insertion semantics; v7 adds method bits 32/64/128 and source byte at value bits 8-15; v8 limits trap monsters to Main Monster Zones. All retain 88 bytes.
 // Wire v4 keeps v3 size; forms 5/6 use monster_flags as custom type (form 6 bit 31 retains spell/trap identity) and self_summon as name code.
@@ -37,6 +38,8 @@ enum editor_result { EDITOR_OK=0, EDITOR_DISABLED=1, EDITOR_UNSAFE=2,
  EDITOR_STALE=3, EDITOR_BAD_COMMAND=4, EDITOR_UNKNOWN_CARD=5,
  EDITOR_BAD_DESTINATION=6, EDITOR_OCCUPIED=7 };
 extern "C" {
+OCGCORE_API uint32_t editor_summon_kind(intptr_t handle,uint64_t id);
+OCGCORE_API uint32_t editor_list_summon_materials(intptr_t handle,uint64_t id,editor_summon_material_info* output,uint32_t capacity);
 OCGCORE_API int editor_native_trap_profile(uint32_t code,editor_card_info* output);
 OCGCORE_API void editor_enable(intptr_t pduel, int enabled);
 OCGCORE_API int editor_can_edit(intptr_t pduel);

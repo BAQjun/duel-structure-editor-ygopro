@@ -20,13 +20,13 @@ MDPro3 扩展版：[duel-structure-editor-mdpro3](https://github.com/BAQjun/duel
 
 Windows 下将仓库克隆到 D:，准备 Python 3.14，并调整工具脚本中的本机 Python 路径。
 
-1. 创建 `work/downloads` 和 `outputs/决构编辑器-v0.1.15`。
+1. 创建 `work/downloads` 和 `outputs/决构编辑器-v0.1.16`。
 2. 运行 `tools/bootstrap.py` 下载工具链，再运行 `tools/prepare_dependencies.py` 准备依赖。这两步需要联网。
 3. 在 `upstream/script` 准备 YGOPro 卡片脚本，再执行 `tools/build.ps1`。
 4. 自行准备运行所需的数据库与资源。运行目录可用 `DUEL_EDITOR_RUNTIME_ROOT` 指定，构建输出目录可用 `tools/build.ps1 -RuntimeDirectory` 指定。
 5. `tools/test_engine.py` 验证实际核心，`tools/test_gui.py --sync` 与 `--perspective` 验证界面与双方交互。
 
-工具保留开发环境的 D: 路径与版本，迁移环境时需相应调整。v0.1.15 既有开发验证通过 580 项真实引擎断言；此次公开上传清理了注释、整理了源码，没有重新执行整套图形测试。
+工具保留开发环境的 D: 路径与版本，迁移环境时需相应调整。v0.1.16 通过 625 项真实核心断言，另以 `tools/test_gui.py --summon-history` 验证召唤素材界面、整组撤回与前进。
 
 ## 来源与许可证
 
@@ -37,3 +37,5 @@ Windows 下将仓库克隆到 D:，准备 Python 3.14，并调整工具脚本中
 最新修复：[自定义连接怪兽的表示限制](docs/0.2.4-连接表示限制.md)，已同步两个版本；本次真实核心回归通过 589 项断言。
 
 最新修复：[自定义连接怪兽的实际连接关系](docs/0.2.6-自定义连接关系.md)，真实脚本验证女男爵可在自定义箭头指向下发动并破坏狮鹫，核心回归 609 项通过。
+
+新增：[对应召唤与素材履历](docs/0.3.0-对应召唤与素材履历.md)，包含真实素材组、来源与去向、龙骑士素材计数及 I:P 素材赋予抗性。

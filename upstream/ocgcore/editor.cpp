@@ -88,7 +88,7 @@ void TaggedEffect(duel* d,card* c,uint32_t code,uint32_t value,uint32_t kind) {
  auto* e=d->new_effect();e->owner=c;e->handler=c;e->type=EFFECT_TYPE_SINGLE;e->code=code;e->value=int32_t(value);e->editor_kind=kind;
  e->flag[0]=EFFECT_FLAG_CANNOT_DISABLE|EFFECT_FLAG_UNCOPYABLE|EFFECT_FLAG_IGNORE_IMMUNE;e->reset_flag=RESET_EVENT|RESETS_STANDARD;c->add_effect(e);
 }
-void ClearTagged(card* c,uint32_t kind) {std::vector<effect*> remove;for(auto& entry:c->single_effect)if(entry.second->editor_kind==kind)remove.push_back(entry.second);for(auto* e:remove)c->remove_effect(e);}
+void ClearTagged(card* c,uint32_t kind) {std::vector<effect*> remove;for(const auto& entry:c->indexer)if(entry.first->editor_kind==kind)remove.push_back(entry.first);for(auto* e:remove)c->remove_effect(e);}
 bool NativeTrap(duel* d,card_data& data,uint32_t& flags,uint32_t* nativeType=nullptr,uint32_t* summonValue=nullptr) {
  if(!(data.type&TYPE_TRAP))return false;
  char path[64]{};std::snprintf(path,sizeof path,"./script/c%u.lua",data.code);int length=0;auto* buf=read_script(path,&length);if(!buf || length<=0)return false;
@@ -197,6 +197,7 @@ int editor_setup_decks(intptr_t handle,const uint32_t* main0,uint32_t count0,con
  if(error){interpreter::sprintf(d->strbuffer,"%s",lua_tostring(lua->current_state,-1));handle_message(d,1);lua_pop(lua->current_state,1);}
  --lua->no_action;return error?0:1;
 }
+#include "editor_summon_history.inc"
 int editor_apply(intptr_t handle,const editor_command* command) {
  if(!handle || !command)return EDITOR_BAD_COMMAND;
  auto* d=reinterpret_cast<duel*>(handle);
@@ -206,13 +207,16 @@ int editor_apply(intptr_t handle,const editor_command* command) {
  if((cmd.version!=1 && cmd.version!=2 && cmd.version!=3 && cmd.version!=4 && cmd.version!=5 && cmd.version!=6 && cmd.version!=7 && cmd.version!=8 && cmd.version!=9) || cmd.player>1 || cmd.owner>1)return EDITOR_BAD_COMMAND;
  if(cmd.revision!=d->editor_revision)return EDITOR_STALE;
  auto* f=d->game_field;card* target=nullptr;
- if(cmd.opcode==3 || cmd.opcode==4 || cmd.opcode==5 || cmd.opcode==6 || cmd.opcode==9 || cmd.opcode==10) {
+ if(cmd.opcode==3 || cmd.opcode==4 || cmd.opcode==5 || cmd.opcode==6 || cmd.opcode==9 || cmd.opcode==10 || cmd.opcode==12 || cmd.opcode==13 || cmd.opcode==14) {
   if(cmd.version<2)return EDITOR_BAD_COMMAND;
   const uint64_t id=uint64_t(cmd.target_low)|(uint64_t(cmd.target_high)<<32);
   for(auto* c:d->cards)if(c->cardid==id && c->current.location){target=c;break;}
   if(!target)return EDITOR_BAD_COMMAND;
  }
- if(cmd.opcode==9){
+ if(cmd.opcode==14){int result=EditorInitializeSummonMaterials(d,target);if(result!=EDITOR_OK)return result;
+ } else if(cmd.opcode==12){int result=EditorSetSummon(d,target,cmd);if(result!=EDITOR_OK)return result;
+ } else if(cmd.opcode==13){int result=EditorAddSummonMaterial(d,target,cmd);if(result!=EDITOR_OK)return result;
+ } else if(cmd.opcode==9){
   if(cmd.version<9 || target->current.location!=LOCATION_MZONE || !(target->get_type()&TYPE_XYZ) || !cmd.value || cmd.value>255 || target->xyz_materials.size()+cmd.value>255)return EDITOR_BAD_DESTINATION;
   card_data material{};read_card(cmd.code,&material);if(!material.code || material.code!=cmd.code || !material.type || (material.type&TYPE_TOKEN))return EDITOR_UNKNOWN_CARD;
   for(uint32_t i=0;i<cmd.value;++i){auto* c=d->new_card(cmd.code);c->owner=uint8_t(cmd.owner);target->xyz_add(c);}
@@ -371,8 +375,8 @@ int editor_apply(intptr_t handle,const editor_command* command) {
 int editor_apply_group(intptr_t handle,editor_command* commands,uint32_t count){
  if(!handle || !commands || !count || count>512 || editor_group)return EDITOR_BAD_COMMAND;
  if(!editor_can_edit(handle))return EDITOR_UNSAFE;
- for(uint32_t i=0;i<count;++i)if(commands[i].opcode!=1 && commands[i].opcode!=3 && commands[i].opcode!=4 && commands[i].opcode!=9 && commands[i].opcode!=10)return EDITOR_BAD_COMMAND;
+ for(uint32_t i=0;i<count;++i)if(commands[i].opcode!=1 && commands[i].opcode!=3 && commands[i].opcode!=4 && commands[i].opcode!=9 && commands[i].opcode!=10 && commands[i].opcode!=12 && commands[i].opcode!=13 && commands[i].opcode!=14)return EDITOR_BAD_COMMAND;
  auto* d=reinterpret_cast<duel*>(handle);struct Guard{Guard(duel* d){editor_group=d;}~Guard(){editor_group=nullptr;}} guard(d);uint64_t created=0;
- for(uint32_t i=0;i<count;++i){auto& cmd=commands[i];cmd.revision=d->editor_revision;if((cmd.opcode==9 || cmd.opcode==10) && !cmd.target_low && !cmd.target_high){cmd.target_low=uint32_t(created);cmd.target_high=uint32_t(created>>32);}int result=editor_apply(handle,&cmd);if(result!=EDITOR_OK)return result;if(cmd.opcode==1){created=0;for(auto* c:d->cards)if(c->current.location && c->current.location!=LOCATION_OVERLAY && c->cardid>created)created=c->cardid;}}
+ for(uint32_t i=0;i<count;++i){auto& cmd=commands[i];cmd.revision=d->editor_revision;if((cmd.opcode==9 || cmd.opcode==10 || cmd.opcode==12 || cmd.opcode==13 || cmd.opcode==14) && !cmd.target_low && !cmd.target_high){cmd.target_low=uint32_t(created);cmd.target_high=uint32_t(created>>32);}int result=editor_apply(handle,&cmd);if(result!=EDITOR_OK)return result;if(cmd.opcode==1){created=0;for(auto* c:d->cards)if(c->current.location && c->current.location!=LOCATION_OVERLAY && c->cardid>created)created=c->cardid;}}
  return EDITOR_OK;
 }

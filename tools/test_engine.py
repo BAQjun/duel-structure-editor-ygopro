@@ -6,7 +6,7 @@ objects=[str(p) for p in (UP/'obj'/'Release'/'YGOPro').glob('*.o') if p.name!='g
 libs=[str(UP/'bin'/'release'/f'{name}.lib') for name in ('ocgcore','lua','event','freetype','irrlicht','jpeg','png','zlib','sqlite','lzma')]
 cmd=[str(TC/'clang++.exe'),'-std=c++14','-D_IRR_STATIC_LIB_', '-I'+str(UP/'irrlicht'/'include'),'-I'+str(UP/'sqlite3'),'-I'+str(UP/'lua'/'src'),str(ROOT/'tests'/'engine_smoke.cpp'),*objects,*libs,'-lwinhttp','-lws2_32','-liphlpapi','-lwinmm','-lopengl32','-lgdi32','-limm32','-lole32','-luuid','-o',str(ROOT/'work'/'engine_smoke.exe')]
 subprocess.run(cmd,check=True)
-run=Path(os.environ.get('DUEL_EDITOR_RUNTIME_ROOT',str(ROOT/'outputs'/'决构编辑器-v0.1.15')))
+run=Path(os.environ.get('DUEL_EDITOR_RUNTIME_ROOT',str(ROOT/'outputs'/'决构编辑器-v0.1.16')))
 result=subprocess.run([str(ROOT/'work'/'engine_smoke.exe')],cwd=run,capture_output=True,text=True,encoding='utf-8',errors='replace',timeout=120)
 report=result.stdout+result.stderr
 (ROOT/'outputs'/'引擎验证.txt').write_text(report,encoding='utf-8')

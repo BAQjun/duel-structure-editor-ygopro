@@ -1,4 +1,4 @@
-param([switch]$Test, [string]$RuntimeDirectory = "outputs\决构编辑器-v0.1.15")
+param([switch]$Test, [string]$RuntimeDirectory = "outputs\决构编辑器-v0.1.16")
 $ErrorActionPreference = 'Stop'
 $projectRoot = Split-Path -Parent $PSScriptRoot
 if (-not $projectRoot.StartsWith('D:\', [StringComparison]::OrdinalIgnoreCase)) { throw 'This project must remain on D:.' }

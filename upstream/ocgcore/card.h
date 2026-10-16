@@ -11,6 +11,7 @@
 #include "common.h"
 #include "effectset.h"
 #include "card_data.h"
+#include "editor_summon_history.h"
 #include "sort.h"
 #include <set>
 #include <map>
@@ -114,6 +115,7 @@ const material_info null_info;
 
 class card {
 public:
+ std::vector<editor_summon_material_info> editor_summon_materials;
  uint32_t get_editor_type(){return editor_form>=5?get_type():data.type;}
  uint32_t editor_form{0},editor_monster_flags{0},editor_self_summon{0},editor_link_marker{UINT32_MAX};
 	struct effect_relation_hash {

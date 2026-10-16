@@ -1287,7 +1287,7 @@ uint32_t card::is_link_marker(uint32_t dir) {
 	return get_link_marker() & dir;
 }
 uint32_t card::get_linked_zone() {
-	if(!(data.type & TYPE_LINK) || current.location != LOCATION_MZONE || is_treated_as_not_on_field())
+	if(!(get_editor_type() & TYPE_LINK) || current.location != LOCATION_MZONE || is_treated_as_not_on_field())
 		return 0;
 	uint32_t zones = 0;
 	int32_t s = current.sequence;
@@ -1335,7 +1335,7 @@ uint32_t card::get_linked_zone() {
 }
 void card::get_linked_cards(card_set* cset) {
 	cset->clear();
-	if(!(data.type & TYPE_LINK) || current.location != LOCATION_MZONE)
+	if(!(get_editor_type() & TYPE_LINK) || current.location != LOCATION_MZONE)
 		return;
 	int32_t p = current.controler;
 	uint32_t linked_zone = get_linked_zone();
@@ -1343,7 +1343,7 @@ void card::get_linked_cards(card_set* cset) {
 	pduel->game_field->get_cards_in_zone(cset, linked_zone >> 16, 1 - p, LOCATION_MZONE);
 }
 uint32_t card::get_mutual_linked_zone() {
-	if(!(data.type & TYPE_LINK) || current.location != LOCATION_MZONE || is_treated_as_not_on_field())
+	if(!(get_editor_type() & TYPE_LINK) || current.location != LOCATION_MZONE || is_treated_as_not_on_field())
 		return 0;
 	uint32_t zones = 0;
 	int32_t p = current.controler;
@@ -1369,7 +1369,7 @@ uint32_t card::get_mutual_linked_zone() {
 }
 void card::get_mutual_linked_cards(card_set* cset) {
 	cset->clear();
-	if(!(data.type & TYPE_LINK) || current.location != LOCATION_MZONE)
+	if(!(get_editor_type() & TYPE_LINK) || current.location != LOCATION_MZONE)
 		return;
 	int32_t p = current.controler;
 	uint32_t mutual_linked_zone = get_mutual_linked_zone();

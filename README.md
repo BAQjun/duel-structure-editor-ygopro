@@ -18,7 +18,7 @@ MDPro3 扩展版：[duel-structure-editor-mdpro3](https://github.com/BAQjun/duel
 
 ## 构建与验证
 
-Windows 下将仓库克隆到 D:，准备 Python 3.14，并调整工具脚本中的本机 Python 路径。
+构建环境为 Windows，需要 Python 3.14。现有构建脚本仍包含开发环境的绝对路径和目录检查，使用前需按实际工具与项目位置调整；这些脚本设置不应视为用户的安装要求。
 
 1. 创建 `work/downloads` 和 `outputs/决构编辑器-v0.1.16`。
 2. 运行 `tools/bootstrap.py` 下载工具链，再运行 `tools/prepare_dependencies.py` 准备依赖。这两步需要联网。
@@ -26,7 +26,7 @@ Windows 下将仓库克隆到 D:，准备 Python 3.14，并调整工具脚本中
 4. 自行准备运行所需的数据库与资源。运行目录可用 `DUEL_EDITOR_RUNTIME_ROOT` 指定，构建输出目录可用 `tools/build.ps1 -RuntimeDirectory` 指定。
 5. `tools/test_engine.py` 验证实际核心，`tools/test_gui.py --sync` 与 `--perspective` 验证界面与双方交互。
 
-工具保留开发环境的 D: 路径与版本，迁移环境时需相应调整。v0.1.16 通过 625 项真实核心断言，另以 `tools/test_gui.py --summon-history` 验证召唤素材界面、整组撤回与前进。
+v0.1.16 通过 625 项真实核心断言，另以 `tools/test_gui.py --summon-history` 验证召唤素材界面、整组撤回与前进。
 
 ## 来源与许可证
 

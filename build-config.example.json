@@ -1,0 +1,8 @@
+{
+  "python": "python",
+  "unity_data": "path/to/Unity/Editor/Data",
+  "game_root": "path/to/MDPro3",
+  "ygopro_root": "../duel-structure-editor-ygopro",
+  "ygopro_runtime": "../duel-structure-editor-ygopro/outputs/决构编辑器-v0.1.17",
+  "asset_root": "path/to/YGOPro"
+}

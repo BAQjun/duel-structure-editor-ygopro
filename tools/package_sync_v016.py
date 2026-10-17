@@ -2,7 +2,7 @@ from pathlib import Path
 import json, hashlib, zipfile
 ROOT=Path(__file__).resolve().parents[1]
 OUT=ROOT/'outputs'; RUN=OUT/'决构编辑器-v0.1.16'; UP=ROOT/'upstream'
-assert ROOT.drive.upper()=='D:' and RUN.is_dir()
+assert RUN.is_dir()
 SOURCE=OUT/'source-v0.1.16.zip'; PORTABLE=OUT/'duel-editor-v0.1.16.zip'
 reports=['使用说明.md','v0.1.16-召唤素材说明.md','引擎验证.txt','YGO-召唤素材验证.txt','视角与独立时点验证.txt','卡片状态审计.md','源码基线.json']
 with zipfile.ZipFile(SOURCE,'w',zipfile.ZIP_DEFLATED,compresslevel=6) as z:

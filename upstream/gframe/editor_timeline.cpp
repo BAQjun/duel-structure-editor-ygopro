@@ -1,4 +1,5 @@
 #include "editor_timeline.h"
+#include "editor_paths.h"
 #include "editor_history.h"
 #include "../ocgcore/duel.h"
 #include "../ocgcore/field.h"
@@ -39,15 +40,15 @@ void WriteBytes(std::ostream& f,const std::vector<uint8_t>& bytes){Write(f,uint3
 }
 bool EditorTimeline::Save(const std::string& file,const std::string& name) const{
  if(points.empty() || name.size()>256)return false;
- std::ofstream f(file,std::ios::binary|std::ios::trunc);if(!f)return false;Write(f,MAGIC);Write(f,FORMAT);Write(f,uint32_t(sizeof(editor_command)));std::vector<uint8_t> label(name.begin(),name.end());WriteBytes(f,label);
+ std::ofstream f(EditorPaths::FromUtf8(file).c_str(),std::ios::binary|std::ios::trunc);if(!f)return false;Write(f,MAGIC);Write(f,FORMAT);Write(f,uint32_t(sizeof(editor_command)));std::vector<uint8_t> label(name.begin(),name.end());WriteBytes(f,label);
  f.write(reinterpret_cast<const char*>(seed.data()),sizeof seed);Write(f,options);Write(f,header);Write(f,setup.hand);Write(f,setup.hand1);
  for(const auto& d:setup.decks)for(const auto* list:{&d.main,&d.extra}){Write(f,uint32_t(list->size()));if(!list->empty())f.write(reinterpret_cast<const char*>(list->data()),list->size()*4);}
  WriteBytes(f,initialReplay);Write(f,uint32_t(points[cursor].index));for(size_t i=0;i<points[cursor].index;++i)Write(f,journal[i]);
  Write(f,uint32_t(cursor+1));for(size_t i=0;i<=cursor;++i){const auto& p=points[i];Write(f,uint32_t(p.index));Write(f,p.hash);Write(f,uint32_t(p.waiting));WriteBytes(f,p.prompt);}uint32_t count=0;for(const auto& row:logs)if(row.point<=cursor+1)++count;Write(f,count);for(const auto& row:logs)if(row.point<=cursor+1){Write(f,row.point);Write(f,row.param);WriteBytes(f,std::vector<uint8_t>(row.text.begin(),row.text.end()));}return bool(f);
 }
-std::string EditorTimeline::ReadName(const std::string& file){std::ifstream f(file,std::ios::binary);uint32_t magic=0,format=0,size=0;std::vector<uint8_t> name;if(!Read(f,magic)||!Read(f,format)||!Read(f,size)||magic!=MAGIC||(format!=1 && format!=FORMAT)||size!=sizeof(editor_command)||!ReadBytes(f,name,256))return {};return std::string(name.begin(),name.end());}
+std::string EditorTimeline::ReadName(const std::string& file){std::ifstream f(EditorPaths::FromUtf8(file).c_str(),std::ios::binary);uint32_t magic=0,format=0,size=0;std::vector<uint8_t> name;if(!Read(f,magic)||!Read(f,format)||!Read(f,size)||magic!=MAGIC||(format!=1 && format!=FORMAT)||size!=sizeof(editor_command)||!ReadBytes(f,name,256))return {};return std::string(name.begin(),name.end());}
 bool EditorTimeline::Load(const std::string& file,intptr_t& h,Replay& r){
- std::ifstream f(file,std::ios::binary);uint32_t magic=0,format=0,size=0;std::vector<uint8_t> name;
+ std::ifstream f(EditorPaths::FromUtf8(file).c_str(),std::ios::binary);uint32_t magic=0,format=0,size=0;std::vector<uint8_t> name;
  if(!Read(f,magic)||!Read(f,format)||!Read(f,size)||magic!=MAGIC||(format!=1 && format!=FORMAT)||size!=sizeof(editor_command)||!ReadBytes(f,name,256))return false;
  EditorTimeline loaded;if(!f.read(reinterpret_cast<char*>(loaded.seed.data()),sizeof loaded.seed)||!Read(f,loaded.options)||!Read(f,loaded.header)||!Read(f,loaded.setup.hand)||!Read(f,loaded.setup.hand1)||loaded.setup.hand>254||loaded.setup.hand1>254)return false;
  for(auto& d:loaded.setup.decks)for(auto* list:{&d.main,&d.extra}){uint32_t count=0;if(!Read(f,count)||count>254)return false;list->resize(count);if(count && !f.read(reinterpret_cast<char*>(list->data()),count*4))return false;}

@@ -1,9 +1,11 @@
-param([switch]$Test, [string]$RuntimeDirectory = "outputs\决构编辑器-v0.1.16")
+param([switch]$Test, [string]$RuntimeDirectory = "outputs\决构编辑器-v0.1.17")
 $ErrorActionPreference = 'Stop'
 $projectRoot = Split-Path -Parent $PSScriptRoot
-if (-not $projectRoot.StartsWith('D:\', [StringComparison]::OrdinalIgnoreCase)) { throw 'This project must remain on D:.' }
-$toolBin = Join-Path $projectRoot 'tools\llvm-mingw-20260616-ucrt-x86_64\bin'
-$premake = Join-Path $projectRoot 'tools\premake\premake5.exe'
+. (Join-Path $PSScriptRoot 'build_config.ps1')
+New-Item -ItemType Directory -Force (Join-Path $projectRoot 'work') | Out-Null
+$python = Get-BuildSetting 'python' 'python'
+$toolBin = Get-BuildPath 'llvm_mingw_bin' 'tools/llvm-mingw-20260616-ucrt-x86_64/bin'
+$premake = Get-BuildPath 'premake' 'tools/premake/premake5.exe'
 $env:PATH = "$toolBin;$env:PATH"
 $env:TEMP = Join-Path $projectRoot 'work'
 $env:TMP = $env:TEMP
@@ -17,13 +19,15 @@ try {
     if ($LASTEXITCODE -ne 0) { throw 'Project generation failed.' }
     & "$toolBin\mingw32-make.exe" -C build -j 6 config=release CC=clang CXX=clang++ AR=llvm-ar 'LDFLAGS=-municode -lopengl32 -lgdi32 -limm32 -lole32 -luuid'
     if ($LASTEXITCODE -ne 0) { throw 'Build failed.' }
-    Copy-Item -LiteralPath 'bin\release\YGOPro.exe' -Destination (Join-Path (Join-Path $projectRoot $RuntimeDirectory) 'YGOPro.exe')
+    $runtimeRoot = if ([IO.Path]::IsPathRooted($RuntimeDirectory)) { $RuntimeDirectory } else { Join-Path $projectRoot $RuntimeDirectory }
+    New-Item -ItemType Directory -Force $runtimeRoot | Out-Null
+    Copy-Item -LiteralPath 'bin\release\YGOPro.exe' -Destination (Join-Path $runtimeRoot 'YGOPro.exe')
 } finally { Pop-Location }
 if ($Test) {
-    & 'D:\Codex\tools\Python314\python.exe' (Join-Path $PSScriptRoot 'test_engine.py')
+    & $python (Join-Path $PSScriptRoot 'test_engine.py')
     if ($LASTEXITCODE -ne 0) { throw 'Engine verification failed.' }
-    & 'D:\Codex\tools\Python314\python.exe' (Join-Path $PSScriptRoot 'test_gui.py') --sync
+    & $python (Join-Path $PSScriptRoot 'test_gui.py') --sync
     if ($LASTEXITCODE -ne 0) { throw 'GUI verification failed.' }
-    & 'D:\Codex\tools\Python314\python.exe' (Join-Path $PSScriptRoot 'test_gui.py') --perspective
+    & $python (Join-Path $PSScriptRoot 'test_gui.py') --perspective
     if ($LASTEXITCODE -ne 0) { throw 'Perspective verification failed.' }
 }

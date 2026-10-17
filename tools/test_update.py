@@ -1,6 +1,7 @@
+from build_config import path_setting
 from pathlib import Path
 import subprocess,os,shutil,time,sys
-ROOT=Path(__file__).resolve().parents[1];UP=ROOT/'upstream';TC=ROOT/'tools'/'llvm-mingw-20260616-ucrt-x86_64'/'bin'
+ROOT=Path(__file__).resolve().parents[1];UP=ROOT/'upstream';TC=path_setting('llvm_mingw_bin','tools/llvm-mingw-20260616-ucrt-x86_64/bin')
 os.environ['PATH']=str(TC)+os.pathsep+os.environ['PATH'];os.environ['TMP']=os.environ['TEMP']=str(ROOT/'work')
 cmd=[str(TC/'clang++.exe'),'-std=c++14','-DNOMINMAX','-I'+str(UP/'sqlite3'),'-I'+str(UP/'zlib'),'-I'+str(UP/'irrlicht'/'include'),str(ROOT/'tests'/'update_smoke.cpp'),str(UP/'gframe'/'card_update_backend.cpp'),str(UP/'gframe'/'card_download.cpp'),str(UP/'bin'/'release'/'sqlite.lib'),str(UP/'bin'/'release'/'zlib.lib'),'-lwinhttp','-o',str(ROOT/'work'/'update_smoke.exe')]
 subprocess.run(cmd,check=True)

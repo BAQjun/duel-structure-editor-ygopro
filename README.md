@@ -18,9 +18,9 @@ MDPro3 扩展版：[duel-structure-editor-mdpro3](https://github.com/BAQjun/duel
 
 ## 构建与验证
 
-构建环境为 Windows，需要 Python 3.14。现有构建脚本仍包含开发环境的绝对路径和目录检查，使用前需按实际工具与项目位置调整；这些脚本设置不应视为用户的安装要求。
+构建环境为 Windows，需要 Python 3.14。工具与依赖位置通过环境变量或 `build-config.local.json` 配置，无指定盘符要求。详见[路径配置与迁移](docs/路径配置与迁移.md)。
 
-1. 创建 `work/downloads` 和 `outputs/决构编辑器-v0.1.16`。
+1. 创建 `work/downloads` 和 `outputs/决构编辑器-v0.1.17`。
 2. 运行 `tools/bootstrap.py` 下载工具链，再运行 `tools/prepare_dependencies.py` 准备依赖。这两步需要联网。
 3. 在 `upstream/script` 准备 YGOPro 卡片脚本，再执行 `tools/build.ps1`。
 4. 自行准备运行所需的数据库与资源。运行目录可用 `DUEL_EDITOR_RUNTIME_ROOT` 指定，构建输出目录可用 `tools/build.ps1 -RuntimeDirectory` 指定。
@@ -39,3 +39,5 @@ v0.1.16 通过 625 项真实核心断言，另以 `tools/test_gui.py --summon-hi
 最新修复：[自定义连接怪兽的实际连接关系](docs/0.2.6-自定义连接关系.md)，真实脚本验证女男爵可在自定义箭头指向下发动并破坏狮鹫，核心回归 609 项通过。
 
 新增：[对应召唤与素材履历](docs/0.3.0-对应召唤与素材履历.md)，包含真实素材组、来源与去向、龙骑士素材计数及 I:P 素材赋予抗性。
+
+路径兼容更新：v0.1.17 移除开发机盘符与目录依赖，配置和迁移说明见[路径配置与迁移](docs/路径配置与迁移.md)。

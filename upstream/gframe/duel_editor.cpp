@@ -6,6 +6,7 @@
 #include "deck_manager.h"
 #include "file_system.h"
 #include "editor_timeline.h"
+#include "editor_paths.h"
 #include "editor_effect_labels.h"
 #include "../ocgcore/editor_rules.h"
 #include <map>
@@ -70,7 +71,7 @@ const uint32_t stateMasks[]={0x10U,0x20U,0x100U,0x4000000U};
 const wchar_t* stateLabels[]={L"本回合盖放",L"没有等级",L"本回合不能手动变更表示",L"被禁止令适用"};
 irr::gui::IGUIComboBox* saveFolder{};irr::gui::IGUIEditBox* folderName{};std::vector<std::wstring> saveFolders;std::wstring saveRoot;irr::gui::IGUIWindow* saveDeleteWindow{};irr::gui::IGUIStaticText* saveDeleteQuestion{};std::wstring deleteSavePath;bool deleteSaveFolder=false;irr::gui::IGUIWindow* drawWindow{};irr::gui::IGUIEditBox* drawCount{};irr::gui::IGUIStaticText* drawStatus{};uint32_t drawPlayer=0;bool startupSaveSelection=false;
 std::string Utf8Path(const std::wstring& path){char bytes[4096]{};BufferIO::EncodeUTF8(path.c_str(),bytes);return bytes;}
-void EnsureSaveRoot(){if(saveRoot.empty()){std::ifstream conf("./editor-data.conf");std::string path;std::getline(conf,path);if(path.empty())path="D:/Codex/projects/duel-structure-editor/userdata/saves";wchar_t decoded[2048]{};BufferIO::DecodeUTF8(path.c_str(),decoded);saveRoot=decoded;std::replace(saveRoot.begin(),saveRoot.end(),L'\\',L'/');if(saveRoot.size()<3 || (saveRoot[0]!=L'D' && saveRoot[0]!=L'd') || saveRoot[1]!=L':')saveRoot=L"D:/Codex/projects/duel-structure-editor/userdata/saves";}for(size_t i=3;i<saveRoot.size();++i)if(saveRoot[i]==L'/')FileSystem::MakeDir(saveRoot.substr(0,i).c_str());FileSystem::MakeDir(saveRoot.c_str());}
+void EnsureSaveRoot(){if(saveRoot.empty())saveRoot=EditorPaths::SaveRoot(EditorPaths::RuntimeRoot());EditorPaths::CreateDirectories(saveRoot); }
 std::wstring CurrentSaveFolder(){EnsureSaveRoot();int i=saveFolder->getSelected();return saveRoot+(i>0 && size_t(i)<saveFolders.size()?L"/"+saveFolders[i]:L"");}
 void RefreshSaveFolders(){EnsureSaveRoot();std::wstring previous;int selected=saveFolder->getSelected();if(selected>0 && size_t(selected)<saveFolders.size())previous=saveFolders[selected];saveFolders={L""};FileSystem::TraversalDir(saveRoot.c_str(),[](const wchar_t* name,bool dir){if(dir && std::wstring(name)!=L"." && std::wstring(name)!=L"..")saveFolders.emplace_back(name);});std::sort(saveFolders.begin()+1,saveFolders.end());saveFolder->clear();saveFolder->addItem(L"根文件夹",0);for(size_t i=1;i<saveFolders.size();++i)saveFolder->addItem(saveFolders[i].c_str(),i);auto found=std::find(saveFolders.begin(),saveFolders.end(),previous);saveFolder->setSelected(found==saveFolders.end()?0:int(found-saveFolders.begin()));}
 bool SafeSaveDeletePath(const std::wstring& path,std::wstring& result){wchar_t root[4096]{},target[4096]{};auto rootLength=GetFullPathNameW(saveRoot.c_str(),4096,root,nullptr),targetLength=GetFullPathNameW(path.c_str(),4096,target,nullptr);if(!rootLength || rootLength>=4096 || !targetLength || targetLength>=4096)return false;std::wstring prefix=root;while(!prefix.empty() && (prefix.back()==L'/' || prefix.back()==L'\\'))prefix.pop_back();prefix+=L"\\";result=target;if(result.size()<=prefix.size() || _wcsnicmp(result.c_str(),prefix.c_str(),prefix.size()))return false;DWORD attrs=GetFileAttributesW(result.c_str());return attrs!=INVALID_FILE_ATTRIBUTES && !(attrs&FILE_ATTRIBUTE_REPARSE_POINT);}
@@ -289,7 +290,7 @@ void DuelEditor::ApplyViewSwitch(){std::lock_guard<std::mutex> lock(mainGame->gM
 void DuelEditor::Initialize() {
  auto* env=mainGame->env;
  toggle=env->addButton({310,5,455,35},nullptr,TOGGLE,L"进入决构编辑");toggle->setVisible(false);
- panel=env->addWindow({330,35,740,615},false,L"决构编辑器 · v0.1.16");
+ panel=env->addWindow({330,35,740,615},false,L"决构编辑器 · v0.1.17");
  panel->getCloseButton()->setVisible(false);panel->setVisible(false);
  mode=env->addComboBox({15,30,395,58},panel,MODE);mode->addItem(L"生成新卡片",0);mode->addItem(L"编辑已有卡片",1);
  searchLabel=env->addStaticText(L"卡名或卡号",{15,62,120,81},false,false,panel);

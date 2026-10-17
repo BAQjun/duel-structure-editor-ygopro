@@ -34,3 +34,5 @@ upstream/lzma/
 upstream/png/
 upstream/sqlite3/
 upstream/zlib/
+
+/build-config.local.json

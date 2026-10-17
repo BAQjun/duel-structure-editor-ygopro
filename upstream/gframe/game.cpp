@@ -136,13 +136,20 @@ bool Game::Initialize() {
  if(device->getFileSystem()->existFile((managedCards+"/superpre.ypk").c_str()))device->getFileSystem()->addFileArchive((managedCards+"/superpre.ypk").c_str(),true,false,irr::io::EFAT_ZIP);
 	LoadExpansions();
 	env = device->getGUIEnvironment();
+#ifdef _WIN32
+ wchar_t windowsDir[32768]{};GetWindowsDirectoryW(windowsDir,32768);
+ char windowsPath[131072]{};BufferIO::EncodeUTF8(windowsDir,windowsPath);
+ std::string windowsFonts=std::string(windowsPath)+"/Fonts/";
+#else
+ std::string windowsFonts;
+#endif
 	numFont = irr::gui::CGUITTFont::createTTFont(env, gameConf.numfont, 16);
 	if(!numFont) {
-		const char* numFontPaths[] = {
+		const std::string numFontPaths[] = {
 			"./fonts/numFont.ttf",
 			"./fonts/numFont.ttc",
 			"./fonts/numFont.otf",
-			"C:/Windows/Fonts/arialbd.ttf",
+			windowsFonts+"arialbd.ttf",
 			"/usr/share/fonts/truetype/DroidSansFallbackFull.ttf",
 			"/usr/share/fonts/opentype/noto/NotoSansCJK-Bold.ttc",
 			"/usr/share/fonts/google-noto-cjk/NotoSansCJK-Bold.ttc",
@@ -151,7 +158,7 @@ bool Game::Initialize() {
 			"/System/Library/Fonts/SFNS.ttf",
 		};
 		for(auto path : numFontPaths) {
-			BufferIO::CopyString(path, gameConf.numfont);
+			BufferIO::CopyString(path.c_str(), gameConf.numfont);
 			numFont = irr::gui::CGUITTFont::createTTFont(env, gameConf.numfont, 16);
 			if(numFont)
 				break;
@@ -159,16 +166,16 @@ bool Game::Initialize() {
 	}
 	textFont = irr::gui::CGUITTFont::createTTFont(env, gameConf.textfont, gameConf.textfontsize);
 	if(!textFont) {
-		const char* textFontPaths[] = {
+		const std::string textFontPaths[] = {
 			"./fonts/textFont.ttf",
 			"./fonts/textFont.ttc",
 			"./fonts/textFont.otf",
-			"C:/Windows/Fonts/msyh.ttc",
-			"C:/Windows/Fonts/msyh.ttf",
-			"C:/Windows/Fonts/simsun.ttc",
-			"C:/Windows/Fonts/YuGothM.ttc",
-			"C:/Windows/Fonts/meiryo.ttc",
-			"C:/Windows/Fonts/msgothic.ttc",
+			windowsFonts+"msyh.ttc",
+			windowsFonts+"msyh.ttf",
+			windowsFonts+"simsun.ttc",
+			windowsFonts+"YuGothM.ttc",
+			windowsFonts+"meiryo.ttc",
+			windowsFonts+"msgothic.ttc",
 			"/usr/share/fonts/truetype/DroidSansFallbackFull.ttf",
 			"/usr/share/fonts/opentype/noto/NotoSansCJK-Regular.ttc",
 			"/usr/share/fonts/google-noto-cjk/NotoSansCJK-Regular.ttc",
@@ -177,7 +184,7 @@ bool Game::Initialize() {
 			"/System/Library/Fonts/STHeiti Medium.ttc",
 		};
 		for(auto path : textFontPaths) {
-			BufferIO::CopyString(path, gameConf.textfont);
+			BufferIO::CopyString(path.c_str(), gameConf.textfont);
 			textFont = irr::gui::CGUITTFont::createTTFont(env, gameConf.textfont, gameConf.textfontsize);
 			if(textFont)
 				break;

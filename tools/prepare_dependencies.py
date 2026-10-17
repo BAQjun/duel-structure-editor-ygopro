@@ -1,5 +1,6 @@
 import concurrent.futures, hashlib, json, pathlib, shutil, urllib.request, tarfile, zipfile
 ROOT=pathlib.Path(__file__).resolve().parents[1]
+(ROOT/'work/downloads').mkdir(parents=True,exist_ok=True)
 TASKS=[
  ('lua','https://codeload.github.com/lua/lua/tar.gz/refs/tags/v5.4.8','lua-5.4.8',None),
  ('irrlicht','https://codeload.github.com/mercury233/irrlicht/tar.gz/refs/heads/main','irrlicht-main',None),
